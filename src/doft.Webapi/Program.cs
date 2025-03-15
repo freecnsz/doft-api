@@ -26,16 +26,15 @@ builder.Services.ConfigureIdentity();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(
-        options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "doft.Webapi v1");
-        }
-    );
-}
+
+app.UseSwagger();
+app.UseSwaggerUI(
+    options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "doft.Webapi v1");
+    }
+);
+
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

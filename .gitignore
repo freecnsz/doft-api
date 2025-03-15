@@ -152,3 +152,5 @@ _ReSharper*/
 tools/
 .cake/
 .tools/
+
+appsettings.json
