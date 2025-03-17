@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using doft.Application.Interfaces.RepositoryInterfaces;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace doft.Infrastructure.Repositories
@@ -23,14 +24,15 @@ namespace doft.Infrastructure.Repositories
             return entity;    
         }
 
-        public Task DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IReadOnlyList<T>> GetAllAsync()
+        public async Task<T?> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public Task<T> GetByIdAsync(int id)
@@ -38,9 +40,10 @@ namespace doft.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().Update(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

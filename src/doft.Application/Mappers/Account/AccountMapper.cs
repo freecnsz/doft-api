@@ -20,15 +20,12 @@ namespace doft.Application.Mappers.Account
             };
         }
 
-        public static SignInResponseDto ToSignInResponseDto(this AppUser user, string token)
+        public static SignInResponseDto ToSignInResponseDto(this AppUser user, string token, string refreshToken)
         {
             return new SignInResponseDto
             {
                 Token = token,
-
-                Username = user.UserName,
-                Email = user.Email,
-                Role = "User"
+                RefreshToken = refreshToken
             };
         }
        

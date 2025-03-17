@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using doft.Application.Validators.Account;
 using FluentValidation;
+using doft.Infrastructure.Repositories.Auth;
 
 
 namespace doft.Webapi.Extensions
@@ -23,7 +24,8 @@ namespace doft.Webapi.Extensions
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateUserCommand).Assembly));
             services.AddValidatorsFromAssembly(typeof(CreateUserCommandValidator).Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-
+            services.AddTransient<IRefreshTokenService, RefreshTokenService>();
+            services.AddTransient<ITokenRepository, TokenRepository>();
             return services;
         }
 

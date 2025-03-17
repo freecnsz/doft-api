@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace doft.Webapi.Controllers
 {
-    [Route("api/authenticate")]
+    [Route("api/auth")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -43,5 +43,6 @@ namespace doft.Webapi.Controllers
             
             return Ok(result);
         }
+
     }
 }
