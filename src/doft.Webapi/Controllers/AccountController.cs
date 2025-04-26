@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using doft.Application.Commands.Account;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace doft.Webapi.Controllers
-{
     [Route("api/auth")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -18,6 +18,7 @@ namespace doft.Webapi.Controllers
             _mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] CreateUserCommand model)
         {
@@ -31,6 +32,7 @@ namespace doft.Webapi.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpPost("signIn")]
         public async Task<IActionResult> SignIn([FromBody] SignInCommand model)
         {

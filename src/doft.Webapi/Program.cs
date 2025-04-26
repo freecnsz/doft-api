@@ -18,6 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerConfig();
 builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddServices(builder.Configuration);
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 
 // Add identity
@@ -41,5 +42,8 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
