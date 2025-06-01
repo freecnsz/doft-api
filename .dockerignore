@@ -1,6 +1,0 @@
-**/bin/
-**/obj/
-**/.vs
-Dockerfile
-docker-compose*
-.git
