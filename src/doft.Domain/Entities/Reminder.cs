@@ -17,6 +17,8 @@ namespace doft.Domain.Entities
 
         // Navigation Properties
         public virtual DoftTask DoftTask { get; set; }
+        public virtual Event Event { get; set; }
+        public virtual Note Note { get; set; }
         public virtual AppUser User { get; set; }
     }
 }

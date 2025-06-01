@@ -12,14 +12,18 @@ namespace doft.Domain.Entities
         public string OwnerId { get; set; }
         public int CategoryId { get; set; }
         public int DetailId { get; set; }
+        public int RepeatId { get; set; }
         public DoftTaskStatus Status { get; set; }
         public DoftTaskPriority Priority { get; set; }
+        public double PriorityScore { get; set; }
         public DateTime DueDate { get; set; }
+
 
         // Navigation Properties
         public virtual AppUser Owner { get; set; }
         public virtual Category Category { get; set; }
         public virtual Detail Detail { get; set; }
         public virtual ICollection<Reminder> Reminders { get; set; }
+        public virtual ICollection<TagLink> TagLinks { get; set; } = new List<TagLink>();
     }
 }

@@ -11,7 +11,7 @@ public static class IdentityConfiguration
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
 
-        services.AddIdentity<AppUser, AppUserRole>(options =>
+        services.AddIdentity<AppUser, IdentityRole<string>>(options =>
         {
             options.User.RequireUniqueEmail = true;
             options.Password.RequireDigit = false;
@@ -20,7 +20,7 @@ public static class IdentityConfiguration
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 3;
             
-        }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+        }).AddEntityFrameworkStores<ApplicationDbContext>();
 
         return services;
     }

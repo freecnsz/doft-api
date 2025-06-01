@@ -12,8 +12,8 @@ using doft.Infrastructure;
 namespace doft.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250316235350_InitialSetup")]
-    partial class InitialSetup
+    [Migration("20250526184843_NoteSetup2")]
+    partial class NoteSetup2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,32 @@ namespace doft.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
@@ -138,6 +164,9 @@ namespace doft.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -363,11 +392,15 @@ namespace doft.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OwnerId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Priority")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<double>("PriorityScore")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -392,10 +425,13 @@ namespace doft.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("DetailId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("EventDate")
+                    b.Property<DateTime>("FromDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsWholeDay")
@@ -408,7 +444,15 @@ namespace doft.Infrastructure.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("text");
 
+                    b.Property<int>("RepeatId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ToDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("DetailId");
 
@@ -425,6 +469,9 @@ namespace doft.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("text");
@@ -436,6 +483,8 @@ namespace doft.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("DetailId");
 
@@ -610,40 +659,9 @@ namespace doft.Infrastructure.Migrations
                     b.ToTable("TagLinks", (string)null);
                 });
 
-            modelBuilder.Entity("doft.Domain.Enums.AppUserRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetRoles", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("doft.Domain.Enums.AppUserRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -670,7 +688,7 @@ namespace doft.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("doft.Domain.Enums.AppUserRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -728,7 +746,9 @@ namespace doft.Infrastructure.Migrations
 
                     b.HasOne("doft.Domain.Entities.AppUser", "Owner")
                         .WithMany("DoftTasks")
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
@@ -739,6 +759,12 @@ namespace doft.Infrastructure.Migrations
 
             modelBuilder.Entity("doft.Domain.Entities.Event", b =>
                 {
+                    b.HasOne("doft.Domain.Entities.Category", "Category")
+                        .WithMany("Events")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("doft.Domain.Entities.Detail", "Detail")
                         .WithMany()
                         .HasForeignKey("DetailId")
@@ -749,6 +775,8 @@ namespace doft.Infrastructure.Migrations
                         .WithMany("Events")
                         .HasForeignKey("OwnerId");
 
+                    b.Navigation("Category");
+
                     b.Navigation("Detail");
 
                     b.Navigation("Owner");
@@ -756,6 +784,12 @@ namespace doft.Infrastructure.Migrations
 
             modelBuilder.Entity("doft.Domain.Entities.Note", b =>
                 {
+                    b.HasOne("doft.Domain.Entities.Category", "Category")
+                        .WithMany("Notes")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("doft.Domain.Entities.Detail", "Detail")
                         .WithMany()
                         .HasForeignKey("DetailId")
@@ -765,6 +799,8 @@ namespace doft.Infrastructure.Migrations
                     b.HasOne("doft.Domain.Entities.AppUser", "Owner")
                         .WithMany("Notes")
                         .HasForeignKey("OwnerId");
+
+                    b.Navigation("Category");
 
                     b.Navigation("Detail");
 
@@ -809,19 +845,8 @@ namespace doft.Infrastructure.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("doft.Domain.Enums.AppUserRole", b =>
-                {
-                    b.HasOne("doft.Domain.Entities.AppUser", "User")
-                        .WithMany("AppUserRoles")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("doft.Domain.Entities.AppUser", b =>
                 {
-                    b.Navigation("AppUserRoles");
-
                     b.Navigation("Attachments");
 
                     b.Navigation("DoftTasks");
@@ -838,6 +863,10 @@ namespace doft.Infrastructure.Migrations
             modelBuilder.Entity("doft.Domain.Entities.Category", b =>
                 {
                     b.Navigation("DoftTasks");
+
+                    b.Navigation("Events");
+
+                    b.Navigation("Notes");
                 });
 
             modelBuilder.Entity("doft.Domain.Entities.DoftTask", b =>

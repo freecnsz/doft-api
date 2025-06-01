@@ -16,13 +16,13 @@ namespace doft.Application.Mappers.Account
             return new RegisterResponseDto
             {
                 Username = user.UserName,
-                Email = user.Email,
+                Email = user.Email
             };
         }
 
-        public static SignInResponseDto ToSignInResponseDto(this AppUser user, string token, string refreshToken)
+        public static LoginResponseDto ToSignInResponseDto(this AppUser user, string token, string refreshToken)
         {
-            return new SignInResponseDto
+            return new LoginResponseDto
             {
                 Token = token,
                 RefreshToken = refreshToken

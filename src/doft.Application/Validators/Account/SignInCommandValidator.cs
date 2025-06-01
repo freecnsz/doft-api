@@ -7,7 +7,7 @@ using FluentValidation;
 
 namespace doft.Application.Validators.Account
 {
-    public class SignInCommandValidator : AbstractValidator<SignInCommand>
+    public class SignInCommandValidator : AbstractValidator<LoginCommand>
     {
         public SignInCommandValidator()
         {

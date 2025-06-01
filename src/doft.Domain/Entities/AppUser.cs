@@ -11,13 +11,13 @@ namespace doft.Domain.Entities
     {
         public string FullName { get; set; }
         public string ProfilePictureUrl { get; set; }
+        public string Bio { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<AppUserRole> AppUserRoles { get; set; }
         public virtual ICollection<Preference> Preferences { get; set; }
         public virtual ICollection<DoftTask> DoftTasks { get; set; }
         public virtual ICollection<Note> Notes { get; set; }

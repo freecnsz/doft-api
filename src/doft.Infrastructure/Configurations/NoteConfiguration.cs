@@ -14,10 +14,12 @@ public class NoteConfiguration : IEntityTypeConfiguration<Note>
 
         builder.HasOne(n => n.Owner)
                .WithMany(u => u.Notes)
-               .HasForeignKey(n => n.OwnerId);
+               .HasForeignKey(n => n.OwnerId)
+               .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(n => n.Detail)
-               .WithMany()
-               .HasForeignKey(n => n.DetailId);
+        builder.HasOne(n => n.Category)
+               .WithMany(c => c.Notes)
+               .HasForeignKey(n => n.CategoryId)
+               .OnDelete(DeleteBehavior.SetNull);
     }
 }

@@ -11,5 +11,11 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         builder.HasKey(t => t.Id);
         builder.Property(t => t.Name).HasMaxLength(50).IsRequired();
         builder.HasIndex(t => t.Name).IsUnique();
+
+        // Configure relationship with TagLinks
+        builder.HasMany(t => t.TagLinks)
+               .WithOne(tl => tl.Tag)
+               .HasForeignKey(tl => tl.TagId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

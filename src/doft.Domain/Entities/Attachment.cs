@@ -17,5 +17,6 @@ namespace doft.Domain.Entities
 
         // Navigation Properties
         public virtual AppUser Owner { get; set; }
+        public virtual ICollection<AttachmentLink> AttachmentLinks { get; set; }
     }
 }

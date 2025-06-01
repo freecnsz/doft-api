@@ -10,16 +10,19 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
 
         builder.HasKey(e => e.Id);
 
-        builder.Property(e => e.EventDate).IsRequired();
+        builder.Property(e => e.FromDate).IsRequired();
+        builder.Property(e => e.ToDate).IsRequired();
         builder.Property(e => e.Location).HasMaxLength(255);
         builder.Property(e => e.IsWholeDay);
 
         builder.HasOne(e => e.Owner)
                .WithMany(u => u.Events)
-               .HasForeignKey(e => e.OwnerId);
+               .HasForeignKey(e => e.OwnerId)
+               .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(e => e.Detail)
-               .WithMany()
-               .HasForeignKey(e => e.DetailId);
+        builder.HasOne(e => e.Category)
+               .WithMany(c => c.Events)
+               .HasForeignKey(e => e.CategoryId)
+               .OnDelete(DeleteBehavior.SetNull);
     }
 }

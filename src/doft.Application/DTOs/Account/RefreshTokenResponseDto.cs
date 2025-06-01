@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace doft.Application.DTOs.Account
 {
-    public class SignInResponseDto
+    public class RefreshTokenResponseDto
     {
-        public string Token { get; set; }
+        public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
+
     }
 }

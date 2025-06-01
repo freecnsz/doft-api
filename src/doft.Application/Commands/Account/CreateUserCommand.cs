@@ -23,12 +23,12 @@ namespace doft.Application.Commands.Account
 
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<AppUserRole> _roleManager;
+        private readonly RoleManager<IdentityRole<string>> _roleManager;
         private readonly ILogger<CreateUserCommandHandler> _logger;
 
         public CreateUserCommandHandler(
-            UserManager<AppUser> userManager, 
-            RoleManager<AppUserRole> roleManager,
+            UserManager<AppUser> userManager,
+            RoleManager<IdentityRole<string>> roleManager,
             ILogger<CreateUserCommandHandler> logger
             )
         {
@@ -47,8 +47,6 @@ namespace doft.Application.Commands.Account
                     _logger.LogError($"User already exists with email: {request.Email}");
                     return ApiResponse<RegisterResponseDto>.Error(400, "User already exists", null);
                 }
-
-
 
                 // Create the user
                 var user = new AppUser
@@ -89,12 +87,12 @@ namespace doft.Application.Commands.Account
                 }
 
                 _logger.LogInformation($"User created successfully: {user.UserName}");
-
                 // Return success response
                 return ApiResponse<RegisterResponseDto>.Success(200, "User created successfully", new RegisterResponseDto
                 {
                     Username = user.UserName,
                     Email = user.Email,
+                    CreatedAt = DateTime.UtcNow
                 });
             }
             catch (Exception ex)

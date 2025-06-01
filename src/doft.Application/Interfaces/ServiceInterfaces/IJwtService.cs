@@ -11,6 +11,7 @@ namespace doft.Application.Interfaces.ServiceInterfaces
     {
         string GenerateToken(string userId, string email, string role);
         bool ValidateToken(string token);
+        ClaimsPrincipal GetPrincipalFromToken(string token);
 
     }
 }

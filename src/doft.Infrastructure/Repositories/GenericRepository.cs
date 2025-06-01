@@ -30,14 +30,14 @@ namespace doft.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<T?> GetByIdAsync(string id)
+        public virtual async Task<T?> GetByIdAsync(string id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public Task<T> GetByIdAsync(int id)
+        public virtual async Task<T?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public async Task UpdateAsync(T entity)

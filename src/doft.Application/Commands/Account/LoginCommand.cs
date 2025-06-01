@@ -15,25 +15,25 @@ using Microsoft.Extensions.Logging;
 
 namespace doft.Application.Commands.Account
 {
-    public class SignInCommand : IRequest<ApiResponse<SignInResponseDto>>
+    public class LoginCommand : IRequest<ApiResponse<LoginResponseDto>>
     {
         public string Email { get; set; }
         public string Password { get; set; }
     }
 
-    public class SignInCommandHandler : IRequestHandler<SignInCommand, ApiResponse<SignInResponseDto>>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<LoginResponseDto>>
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IJwtService _jwtService;
-        private readonly ILogger<SignInCommandHandler> _logger;
+        private readonly ILogger<LoginCommandHandler> _logger;
         private readonly IRefreshTokenService refreshTokenService;
 
-        public SignInCommandHandler(
+        public LoginCommandHandler(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IJwtService jwtService,
-            ILogger<SignInCommandHandler> logger,
+            ILogger<LoginCommandHandler> logger,
             IRefreshTokenService refreshTokenService)
         {
             _userManager = userManager;
@@ -43,8 +43,8 @@ namespace doft.Application.Commands.Account
             this.refreshTokenService = refreshTokenService;
         }
 
-        public async Task<ApiResponse<SignInResponseDto>> Handle(
-            SignInCommand request, 
+        public async Task<ApiResponse<LoginResponseDto>> Handle(
+            LoginCommand request, 
             CancellationToken cancellationToken)
         {
 
@@ -54,7 +54,7 @@ namespace doft.Application.Commands.Account
                 if (user == null)
                 {   
                     _logger.LogError("User not found. Email: {Email}", request.Email);
-                    return ApiResponse<SignInResponseDto>.Error(400, "User not found.", null);
+                    return ApiResponse<LoginResponseDto>.Error(400, "User not found.", null);
                 }
     
                 var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
@@ -62,7 +62,7 @@ namespace doft.Application.Commands.Account
                 {
                     _logger.LogError("Invalid password or email. Email: {Email}", request.Email);
                     await _userManager.AccessFailedAsync(user);
-                    return ApiResponse<SignInResponseDto>.Error(400, "Invalid password or email.", null);
+                    return ApiResponse<LoginResponseDto>.Error(400, "Invalid password or email.", null);
                 }
     
                 var roles = await _userManager.GetRolesAsync(user);
@@ -71,14 +71,15 @@ namespace doft.Application.Commands.Account
                 var response = user.ToSignInResponseDto(token, refreshToken);
                 
                 _logger.LogInformation("User signed in successfully. Id: {Id}, Email: {Email}", user.Id, user.Email);
-                return ApiResponse<SignInResponseDto>.Success(200, "User signed in successfully.", response);
+                return ApiResponse<LoginResponseDto>.Success(200, "User signed in successfully.", response);
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "An error occurred while signing in. Email: {Email}", request.Email);
-                return ApiResponse<SignInResponseDto>.Error(500, e.Message, null);
+                return ApiResponse<LoginResponseDto>.Error(500, e.Message, null);
             }
         }
+
     }
 
 }

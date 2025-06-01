@@ -9,7 +9,7 @@ public class ApiResponse<T>
     public string Message { get; set; }
     public T Data { get; set; }
 
-    public ApiResponse(bool succeded, int statusCode , string message, T data)
+    public ApiResponse(bool succeded, int statusCode, string message, T data)
     {
         Succeded = succeded;
         StatusCode = statusCode;
@@ -26,4 +26,11 @@ public class ApiResponse<T>
     {
         return new ApiResponse<T>(false, statusCode, message, data);
     }
+
+    public static ApiResponse<T> NotFound(string message)
+    {
+        return new ApiResponse<T>(false, 404, message, default);
+    }
+    
+    
 }

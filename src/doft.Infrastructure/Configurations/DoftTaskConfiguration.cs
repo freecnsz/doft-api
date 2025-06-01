@@ -22,14 +22,13 @@ public class DoftTaskConfiguration : IEntityTypeConfiguration<DoftTask>
 
         builder.HasOne(t => t.Owner)
                .WithMany(u => u.DoftTasks)
-               .HasForeignKey(t => t.OwnerId);
+               .HasForeignKey(t => t.OwnerId)
+               .OnDelete(DeleteBehavior.Cascade)
+               .IsRequired();
 
         builder.HasOne(t => t.Category)
                .WithMany(t => t.DoftTasks)
-               .HasForeignKey(t => t.CategoryId);
-
-        builder.HasOne(t => t.Detail)
-               .WithMany()
-               .HasForeignKey(t => t.DetailId);
+               .HasForeignKey(t => t.CategoryId)
+               .OnDelete(DeleteBehavior.SetNull);
     }
 }

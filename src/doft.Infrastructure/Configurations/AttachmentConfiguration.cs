@@ -18,6 +18,13 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
 
         builder.HasOne(a => a.Owner)
                .WithMany(u => u.Attachments)
-               .HasForeignKey(a => a.OwnerId);
+               .HasForeignKey(a => a.OwnerId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        // Add relationship with AttachmentLinks
+        builder.HasMany(a => a.AttachmentLinks)
+               .WithOne(al => al.Attachment)
+               .HasForeignKey(al => al.AttachmentId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

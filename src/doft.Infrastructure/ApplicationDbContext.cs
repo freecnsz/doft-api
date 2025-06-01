@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using doft.Domain.Entities;
 using doft.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace doft.Infrastructure
 {
-    public class ApplicationDbContext : IdentityDbContext<AppUser, AppUserRole, string>
+    public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<string>, string>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -24,6 +25,8 @@ namespace doft.Infrastructure
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<AttachmentLink> AttachmentLinks { get; set; }
         public DbSet<Preference> Preferences { get; set; }
+        public DbSet<UserCategory> UserCategories { get; set; }
+        public DbSet<PlannedTask> PlannedTasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -12,10 +12,12 @@ public class AttachmentLinkConfiguration : IEntityTypeConfiguration<AttachmentLi
 
         builder.Property(al => al.ItemType)
                .HasConversion<string>()
+               .HasMaxLength(50)
                .IsRequired();
 
         builder.HasOne(al => al.Attachment)
-               .WithMany()
-               .HasForeignKey(al => al.AttachmentId);
+               .WithMany(a => a.AttachmentLinks)
+               .HasForeignKey(al => al.AttachmentId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }
